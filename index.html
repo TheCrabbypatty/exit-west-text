@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Doors: a text game about Exit West</title>
+<script src="https://cjrtnc.leaningtech.com/5.0/loader.js"></script>
 <style>
   body { background: #111; color: #f2f2f2; font-family: Georgia, serif; margin: 0; padding: 24px; }
   .wrap { max-width: 720px; margin: 0 auto; }
@@ -11,116 +12,50 @@
   p.sub { color: #bbb; font-size: 17px; line-height: 1.5; }
   #output { background: #000; border: 1px solid #444; padding: 18px; min-height: 260px; font-size: 19px; line-height: 1.6; white-space: pre-wrap; }
   #input { width: 100%; box-sizing: border-box; margin-top: 12px; padding: 14px; font-size: 18px; background: #222; color: #fff; border: 1px solid #666; }
-  .buttons { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
-  button { padding: 10px 14px; font-size: 16px; background: #333; color: #fff; border: 1px solid #777; cursor: pointer; }
-  button:hover { background: #444; }
   .note { color: #aaa; font-size: 14px; line-height: 1.5; margin-top: 16px; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Doors: a text game about Exit West</h1>
-  <p class="sub">Type a command and press Enter. Try: look, help, talk, gather food, open door</p>
-  <div id="output"></div>
-  <input id="input" placeholder="Type a command, then press Enter" autocomplete="off">
-  <div class="buttons">
-    <button onclick="sendCommand('look')">look</button>
-    <button onclick="sendCommand('help')">help</button>
-    <button onclick="sendCommand('talk')">talk</button>
-    <button onclick="sendCommand('inventory')">inventory</button>
-    <button onclick="sendCommand('gather food')">gather food</button>
-    <button onclick="sendCommand('gather water')">gather water</button>
-    <button onclick="sendCommand('open door')">open door</button>
-  </div>
-  <p class="note">This page is the JavaScript port of Game.java. Your friend edits Game.java. You copy the logic into the respond() function below, scene by scene, so the two stay in sync.</p>
+  <p class="sub">Loading the real Java game. Please wait a few seconds, then type a command and press Enter. Try: look, help, talk, gather food, open door</p>
+  <div id="output">Loading Java...</div>
+  <input id="input" placeholder="Type a command, then press Enter" autocomplete="off" disabled>
+  <p class="note">JavaScript here is only glue. It loads Game.jar, creates a Game, and passes your typed text to Game.respond(). All game logic, scenes, and if statements live in Game.java. No game logic is copied into JavaScript.</p>
 </div>
-<script>
-// Pat owns this file. Friend owns Game.java.
-// This respond() is a direct translation of Game.java respond().
-// Same scene names, same commands, same return text.
+<script type="module">
+  // Glue only. No game logic here.
+  // 1. Load CheerpJ and the Java jar.
+  // 2. Create one Game object.
+  // 3. On Enter, send the typed text to game.respond() and print what Java returns.
+  const output = document.getElementById("output");
+  const inputBox = document.getElementById("input");
 
-let scene = "city";
-let food = 0;
-let water = 0;
-let hasBlanket = false;
-let hope = 3;
-
-function print(text) {
-  const out = document.getElementById("output");
-  out.textContent += text + "\n\n";
-  out.scrollTop = out.scrollHeight;
-}
-
-function describeScene() {
-  if (scene === "city") return "Evening class in the city. Nadia sits nearby. Outside, the streets are tense and the power is unreliable. Try: talk, gather food, open door";
-  if (scene === "fall") return "Night. The power is out and a curfew is in place. You need food and water before you can cross. Try: gather food, gather water, open door";
-  if (scene === "mykonos") return "A camp on Mykonos. Tents, queues, and the sea nearby. You arrive with nothing. A worker offers help. Try: talk, take blanket, open door";
-  if (scene === "london") return "A shared house in London. Rooms, housemates, and a flyer on the wall. Try: talk, take blanket, go, open door";
-  if (scene === "marin") return "Marin, California. Quiet streets and a different life. Nadia says you are going different ways now. Try: talk, go, wait";
-  return "Unknown place.";
-}
-
-function respond(rawInput) {
-  const input = rawInput.toLowerCase().trim();
-  if (input === "help") return "Commands: look, help, inventory, gather food, gather water, talk, open door, take blanket, go, wait";
-  if (input === "look") return describeScene();
-  if (input === "inventory") return "Food: " + food + ". Water: " + water + ". Blanket: " + (hasBlanket ? "yes" : "no") + ". Hope: " + hope + ". Scene: " + scene + ".";
-
-  if (scene === "city") {
-    if (input === "talk") return "Nadia talks about leaving, and about what home means now. She is steady. You feel less alone.";
-    if (input === "gather food") { food = food + 1; scene = "fall"; return "You gather food. Night falls, the power goes out, and a curfew starts. You are now in the fall. Type 'look'."; }
-    if (input === "open door") return "Not yet. Gather food first, so you have something to carry.";
-    return "That does not work here. Type 'look' or 'help'.";
+  function print(text) {
+    output.textContent += text + "\n\n";
+    output.scrollTop = output.scrollHeight;
   }
-  if (scene === "fall") {
-    if (input === "gather food") { food = food + 1; return "You find food. Food: " + food + "."; }
-    if (input === "gather water") { water = water + 1; return "You find water. Water: " + water + "."; }
-    if (input === "open door") {
-      if (food >= 1 && water >= 1) { food = 0; water = 0; scene = "mykonos"; return "You cross through the door. You arrive in Mykonos with nothing, as the crossing takes what you carried. Type 'look'."; }
-      return "You need at least 1 food and 1 water before you cross.";
-    }
-    return "That does not work here. Type 'look' or 'help'.";
-  }
-  if (scene === "mykonos") {
-    if (input === "talk") return "A camp worker explains the queues and where to sleep. It is crowded, but people help each other.";
-    if (input === "take blanket") { hasBlanket = true; return "You take a blanket. It will matter later."; }
-    if (input === "open door") { scene = "london"; return "You step through another door, to London. Type 'look'."; }
-    return "That does not work here. Type 'look' or 'help'.";
-  }
-  if (scene === "london") {
-    if (input === "talk") return "A housemate talks about the house rules and the march outside. Belonging here feels uncertain.";
-    if (input === "take blanket") { if (hasBlanket) return "You already have the blanket. You can share it or keep it."; hasBlanket = true; return "You find a blanket in the house."; }
-    if (input === "go") { scene = "marin"; return "You leave London and travel on, to Marin. Type 'look'."; }
-    if (input === "open door") return "The door here leads back to the house, not forward. Try 'go'.";
-    return "That does not work here. Type 'look' or 'help'.";
-  }
-  if (scene === "marin") {
-    if (input === "talk") { hope = hope + 1; return "Nadia says you are going different ways now. It hurts, and it is honest. Hope: " + hope + "."; }
-    if (input === "go") return "You walk on. Arrival was instant, through the doors, but belonging takes time. This is the end of this short game. Thank you for playing.";
-    if (input === "wait") return "You wait and watch the street. Nothing changes quickly here.";
-    return "That does not work here. Type 'look' or 'help'.";
-  }
-  return "You are somewhere unknown. Type 'look'.";
-}
 
-function sendCommand(text) {
-  print("> " + text);
-  print(respond(text));
-}
+  await cheerpjInit();
+  const cj = await cheerpjRunLibrary("/app/Game.jar");
+  const Game = await cj.Game;
+  const game = await new Game();
 
-const inputBox = document.getElementById("input");
-inputBox.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
+  output.textContent = "";
+  print(await game.getIntro());
+  print(await game.respond("look"));
+  inputBox.disabled = false;
+  inputBox.focus();
+
+  inputBox.addEventListener("keydown", async (e) => {
+    if (e.key !== "Enter") return;
     const text = inputBox.value;
     inputBox.value = "";
-    if (text.trim() !== "") sendCommand(text);
-  }
-});
-
-print("Doors: a text game about Exit West.");
-print("You are Saeed, in the city, with Nadia.");
-print(describeScene());
-inputBox.focus();
+    if (text.trim() === "") return;
+    print("> " + text);
+    const reply = await game.respond(text);
+    print(reply);
+  });
 </script>
 </body>
 </html>
