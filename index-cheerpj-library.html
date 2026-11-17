@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Doors: a text game about Exit West</title>
+<script src="https://cjrtnc.leaningtech.com/5.0/loader.js"></script>
+<style>
+  body { background: #111; color: #f2f2f2; font-family: Georgia, serif; margin: 0; padding: 24px; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 28px; margin: 0 0 8px 0; }
+  p.sub { color: #bbb; font-size: 17px; line-height: 1.5; }
+  #output { background: #000; border: 1px solid #444; padding: 18px; min-height: 260px; font-size: 19px; line-height: 1.6; white-space: pre-wrap; }
+  #input { width: 100%; box-sizing: border-box; margin-top: 12px; padding: 14px; font-size: 18px; background: #222; color: #fff; border: 1px solid #666; }
+  .note { color: #aaa; font-size: 14px; line-height: 1.5; margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Doors: a text game about Exit West</h1>
+  <p class="sub">Loading the real Java game. Please wait a few seconds, then type a command and press Enter. Try: look, help, talk, gather food, open door</p>
+  <div id="output">Loading Java...</div>
+  <input id="input" placeholder="Type a command, then press Enter" autocomplete="off" disabled>
+  <p class="note">JavaScript here is only glue. It loads Game.jar, creates a Game, and passes your typed text to Game.respond(). All game logic, scenes, and if statements live in Game.java. No game logic is copied into JavaScript.</p>
+</div>
+<script type="module">
+  // Glue only. No game logic here.
+  // 1. Load CheerpJ and the Java jar.
+  // 2. Create one Game object.
+  // 3. On Enter, send the typed text to game.respond() and print what Java returns.
+  const output = document.getElementById("output");
+  const inputBox = document.getElementById("input");
+
+  function print(text) {
+    output.textContent += text + "\n\n";
+    output.scrollTop = output.scrollHeight;
+  }
+
+  await cheerpjInit();
+  const cj = await cheerpjRunLibrary("/app/Game.jar");
+  const Game = await cj.Game;
+  const game = await new Game();
+
+  output.textContent = "";
+  print(await game.getIntro());
+  print(await game.respond("look"));
+  inputBox.disabled = false;
+  inputBox.focus();
+
+  inputBox.addEventListener("keydown", async (e) => {
+    if (e.key !== "Enter") return;
+    const text = inputBox.value;
+    inputBox.value = "";
+    if (text.trim() === "") return;
+    print("> " + text);
+    const reply = await game.respond(text);
+    print(reply);
+  });
+</script>
+</body>
+</html>
