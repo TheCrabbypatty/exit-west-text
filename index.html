@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Doors: a text game about Exit West</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-  body { background: #111; color: #f2f2f2; font-family: 'Press Start 2p', cursive; margin: 0; padding: 24px; }
+  body { background: #111; color: #f2f2f2; font-family: Georgia, serif; margin: 0; padding: 24px; }
   .wrap { max-width: 720px; margin: 0 auto; }
   h1 { font-size: 28px; margin: 0 0 8px 0; }
   p.sub { color: #bbb; font-size: 17px; line-height: 1.5; }
@@ -19,10 +18,12 @@
 <body>
 <div class="wrap">
   <h1>Doors: a text game about Exit West</h1>
-  <p class="sub">How to play: read the story, type 1 or 2, then press Enter. Press Restart to play again.</p>
+  <p class="sub">How to play: read the story, type 1 or 2, then press Enter. You get one choice. After that the game ends. Press Restart to play again.</p>
   <div id="output"></div>
   <input id="input" placeholder="Type 1 or 2, then press Enter" autocomplete="off">
   <button id="restart">Restart</button>
+  <p class="note">Type 1 to go through the door with Nadia, or 2 to stay with your father.</p>
+</div>
 <script>
   const output = document.getElementById("output");
   const inputBox = document.getElementById("input");
@@ -31,9 +32,38 @@
   // Is the game over? Starts false, becomes true after a valid choice.
   let gameOver = false;
 
-  function print(text) {
-    output.textContent += text + "\n\n";
-    output.scrollTop = output.scrollHeight;
+  // --- Typing + sound: one simple function, no files needed ---
+  // tick() makes one short beep with the browser's built-in sound.
+  let audioCtx = null;
+  function tick() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.frequency.value = 600;
+      g.gain.value = 0.03;
+      o.connect(g);
+      g.connect(audioCtx.destination);
+      o.start();
+      o.stop(audioCtx.currentTime + 0.02);
+    } catch (e) {}
+  }
+
+  // typeText() types text out one character at a time, then calls done().
+  function typeText(text, done) {
+    let i = 0;
+    inputBox.disabled = true;
+    const timer = setInterval(() => {
+      output.textContent += text[i];
+      if (i % 2 === 0) tick();
+      output.scrollTop = output.scrollHeight;
+      i++;
+      if (i >= text.length) {
+        clearInterval(timer);
+        output.textContent += "\n\n";
+        if (done) done();
+      }
+    }, 12);
   }
 
   function getIntro() {
@@ -43,6 +73,9 @@
 
   // The whole game. One input in, one text out.
   // Error checking: only 1 or 2 are valid. Anything else gets an error.
+  // HOW TO ADD A CHOICE: add a new number to the check below,
+  // then add: else if (choice === 3) { return "Your new ending here."; }
+  // and mention 3 in getIntro() and in the instructions above.
   function respond(input) {
     if (gameOver) return "The game is over. Press Restart to play again.";
     const choice = parseInt(input.trim(), 10);
@@ -59,21 +92,31 @@
     gameOver = false;
     output.textContent = "";
     inputBox.value = "";
-    inputBox.disabled = false;
-    print(getIntro());
-    inputBox.focus();
+    typeText(getIntro(), () => {
+      inputBox.disabled = false;
+      inputBox.focus();
+    });
   }
 
   startGame();
 
   inputBox.addEventListener("keydown", (e) => {
     if (e.key !== "Enter") return;
+    if (inputBox.disabled) return;
     const text = inputBox.value;
     inputBox.value = "";
     if (text.trim() === "") return;
-    print("> " + text);
-    print(respond(text));
-    if (gameOver) inputBox.disabled = true;
+    output.textContent += "> " + text + "\n\n";
+    const reply = respond(text);
+    if (reply === "Please enter 1 or 2." || reply === "The game is over. Press Restart to play again.") {
+      output.textContent += reply + "\n\n";
+      inputBox.disabled = false;
+      inputBox.focus();
+      return;
+    }
+    typeText(reply, () => {
+      inputBox.disabled = true;
+    });
   });
 
   restartButton.addEventListener("click", startGame);
