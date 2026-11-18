@@ -20,30 +20,17 @@
   <p class="sub">Type 1 or 2 and press Enter.</p>
   <div id="output"></div>
   <input id="input" placeholder="Type 1 or 2, then press Enter" autocomplete="off">
-  <p class="note">This playable web version is a direct port of Game.java, the Java source in this repo. The Java file holds the same story, choices, and if statements. Type 1 to go through the door with Nadia, or 2 to stay with your father.</p>
+  <p class="note">The game logic is in Game.java, compiled to JavaScript with TeaVM (game.js). This page is only the display and the input box.</p>
 </div>
-<script>
+<script type="module">
+  import { getIntro, respond } from "./game.js";
+
   const output = document.getElementById("output");
   const inputBox = document.getElementById("input");
 
   function print(text) {
     output.textContent += text + "\n\n";
     output.scrollTop = output.scrollHeight;
-  }
-
-  function getIntro() {
-    return "In this choose your own adventure, you take the place of Saeed and will choose his choices at various times throughout the book, by entering 1 or 2.\n"
-      + "After hearing that your father has chosen to stay in the city as to not leave the place he has lived his entire life with your mother. You have the choice to either continue on your plan to leave the city and go through the door with Nadia or to stay with your father. What do you do? (1 or 2)";
-  }
-
-  function respond(input) {
-    const choice = parseInt(input.trim(), 10);
-    if (isNaN(choice)) return "Please enter 1 or 2.";
-    if (choice === 1) {
-      return "You choose to continue on with your plan to go through the door with Nadia. When you go through the door, you arrive in Mykonos and begin living in the refugee camp there. Eventually, you take another door to London, and begin living in an abandoned large mansion with dozens of other refugees from around the world.";
-    } else {
-      return "You choose to abandon your plan with Nadia and stay with your father. Nadia is angry with you, but has to leave quickly in order to meet up with the agent. You spend the next few months with your father, always in fear of the militants deciding to kill you, or of the fighting starting up again. After a few months, your father contracts pneumonia and dies, leaving you alone. You begin having doubts about not going with Nadia when you had the chance, and imagine how life would be if you had chosen to go.";
-    }
   }
 
   print(getIntro());
