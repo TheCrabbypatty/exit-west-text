@@ -11,20 +11,26 @@
   p.sub { color: #bbb; font-size: 17px; line-height: 1.5; }
   #output { background: #000; border: 1px solid #444; padding: 18px; min-height: 260px; font-size: 19px; line-height: 1.6; white-space: pre-wrap; }
   #input { width: 100%; box-sizing: border-box; margin-top: 12px; padding: 14px; font-size: 18px; background: #222; color: #fff; border: 1px solid #666; border-radius: 8px; }
+  #restart { margin-top: 12px; padding: 12px 18px; font-size: 18px; background: #333; color: #fff; border: 1px solid #666; border-radius: 8px; cursor: pointer; }
   .note { color: #aaa; font-size: 14px; line-height: 1.5; margin-top: 16px; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Doors: a text game about Exit West</h1>
-  <p class="sub">Type 1 or 2 and press Enter.</p>
+  <p class="sub">How to play: read the story, type 1 or 2, then press Enter. You get one choice. After that the game ends. Press Restart to play again.</p>
   <div id="output"></div>
   <input id="input" placeholder="Type 1 or 2, then press Enter" autocomplete="off">
-  <p class="note">This playable web version is a direct port of Game.java, the Java source in this repo. The Java file holds the same story, choices, and if statements. Type 1 to go through the door with Nadia, or 2 to stay with your father.</p>
+  <button id="restart">Restart</button>
+  <p class="note">This playable web version is a direct port of Game.java, the Java source in this repo. Type 1 to go through the door with Nadia, or 2 to stay with your father.</p>
 </div>
 <script>
   const output = document.getElementById("output");
   const inputBox = document.getElementById("input");
+  const restartButton = document.getElementById("restart");
+
+  // Is the game over? Starts false, becomes true after a valid choice.
+  let gameOver = false;
 
   function print(text) {
     output.textContent += text + "\n\n";
@@ -36,18 +42,30 @@
       + "After hearing that your father has chosen to stay in the city as to not leave the place he has lived his entire life with your mother. You have the choice to either continue on your plan to leave the city and go through the door with Nadia or to stay with your father. What do you do? (1 or 2)";
   }
 
+  // The whole game. One input in, one text out.
+  // Error checking: only 1 or 2 are valid. Anything else gets an error.
   function respond(input) {
+    if (gameOver) return "The game is over. Press Restart to play again.";
     const choice = parseInt(input.trim(), 10);
-    if (isNaN(choice)) return "Please enter 1 or 2.";
+    if (isNaN(choice) || (choice !== 1 && choice !== 2)) return "Please enter 1 or 2.";
+    gameOver = true;
     if (choice === 1) {
-      return "You choose to continue on with your plan to go through the door with Nadia. When you go through the door, you arrive in Mykonos and begin living in the refugee camp there. Eventually, you take another door to London, and begin living in an abandoned large mansion with dozens of other refugees from around the world.";
+      return "You choose to continue on with your plan to go through the door with Nadia. When you go through the door, you arrive in Mykonos and begin living in the refugee camp there. Eventually, you take another door to London, and begin living in an abandoned large mansion with dozens of other refugees from around the world.\n\nThe end.";
     } else {
-      return "You choose to abandon your plan with Nadia and stay with your father. Nadia is angry with you, but has to leave quickly in order to meet up with the agent. You spend the next few months with your father, always in fear of the militants deciding to kill you, or of the fighting starting up again. After a few months, your father contracts pneumonia and dies, leaving you alone. You begin having doubts about not going with Nadia when you had the chance, and imagine how life would be if you had chosen to go.";
+      return "You choose to abandon your plan with Nadia and stay with your father. Nadia is angry with you, but has to leave quickly in order to meet up with the agent. You spend the next few months with your father, always in fear of the militants deciding to kill you, or of the fighting starting up again. After a few months, your father contracts pneumonia and dies, leaving you alone. You begin having doubts about not going with Nadia when you had the chance, and imagine how life would be if you had chosen to go.\n\nThe end.";
     }
   }
 
-  print(getIntro());
-  inputBox.focus();
+  function startGame() {
+    gameOver = false;
+    output.textContent = "";
+    inputBox.value = "";
+    inputBox.disabled = false;
+    print(getIntro());
+    inputBox.focus();
+  }
+
+  startGame();
 
   inputBox.addEventListener("keydown", (e) => {
     if (e.key !== "Enter") return;
@@ -56,7 +74,10 @@
     if (text.trim() === "") return;
     print("> " + text);
     print(respond(text));
+    if (gameOver) inputBox.disabled = true;
   });
+
+  restartButton.addEventListener("click", startGame);
 </script>
 </body>
 </html>
