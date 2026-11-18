@@ -6,28 +6,21 @@
 <title>Doors: a text game about Exit West</title>
 <script src="https://cjrtnc.leaningtech.com/5.0/loader.js"></script>
 <style>
-  body { background: #111; color: #f2f2f2; font-family: Georgia, serif; margin: 0; padding: 24px; }
+  body { background: #111; color: #f2f2f2; margin: 0; padding: 24px; }
   .wrap { max-width: 720px; margin: 0 auto; }
   h1 { font-size: 28px; margin: 0 0 8px 0; }
   p.sub { color: #bbb; font-size: 17px; line-height: 1.5; }
   #output { background: #000; border: 1px solid #444; padding: 18px; min-height: 260px; font-size: 19px; line-height: 1.6; white-space: pre-wrap; }
   #input { width: 100%; box-sizing: border-box; margin-top: 12px; padding: 14px; font-size: 18px; background: #222; color: #fff; border: 1px solid #666; }
-  .note { color: #aaa; font-size: 14px; line-height: 1.5; margin-top: 16px; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Doors: a text game about Exit West</h1>
-  <p class="sub">Loading the real Java game. Please wait a few seconds, then type a command and press Enter. Try: look, help, talk, gather food, open door</p>
-  <div id="output">Loading Java...</div>
+  <p class="sub">Please wait a few seconds, then type a command and press Enter.</p>
   <input id="input" placeholder="Type a command, then press Enter" autocomplete="off" disabled>
-  <p class="note">JavaScript here is only glue. It loads Game.jar, creates a Game, and passes your typed text to Game.respond(). All game logic, scenes, and if statements live in Game.java. No game logic is copied into JavaScript.</p>
 </div>
 <script type="module">
-  // Glue only. No game logic here.
-  // 1. Load CheerpJ and the Java jar.
-  // 2. Create one Game object.
-  // 3. On Enter, send the typed text to game.respond() and print what Java returns.
   const output = document.getElementById("output");
   const inputBox = document.getElementById("input");
 
