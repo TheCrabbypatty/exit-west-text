@@ -133,7 +133,11 @@
       return;
     }
     typeText(reply, () => {
-      inputBox.disabled = true;
+      // Only disable the input if the game is over.
+      // If this was a middle step, like Mykonos, keep it enabled
+      // so the player can type the next choice.
+      inputBox.disabled = gameOver;
+      if (!gameOver) inputBox.focus();
     });
   });
 
