@@ -6,10 +6,9 @@
 <title>Doors: a text game about Exit West</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-  body { background: #111; color: #f2f2f2; font-family: Georgia, serif; margin: 0; padding: 24px; }
+  body { background: #111; color: #f2f2f2; font-family: 'Press Start 2p', cursive; margin: 0; padding: 24px; }
   .wrap { max-width: 720px; margin: 0 auto; }
   h1 { font-size: 28px; margin: 0 0 8px 0; }
-  h1 { font-family: 'Press Start 2p', cursive; line-height: 1.5; }
   p.sub { color: #bbb; font-size: 17px; line-height: 1.5; }
   #output { background: #000; border: 1px solid #444; padding: 18px; min-height: 260px; font-size: 19px; line-height: 1.6; white-space: pre-wrap; }
   #input { width: 100%; box-sizing: border-box; margin-top: 12px; padding: 14px; font-size: 18px; background: #222; color: #fff; border: 1px solid #666; border-radius: 8px; }
@@ -20,12 +19,10 @@
 <body>
 <div class="wrap">
   <h1>Doors: a text game about Exit West</h1>
-  <p class="sub">How to play: read the story, type 1 or 2, then press Enter. You get one choice. After that the game ends. Press Restart to play again.</p>
+  <p class="sub">How to play: read the story, type 1 or 2, then press Enter. Press Restart to play again.</p>
   <div id="output"></div>
   <input id="input" placeholder="Type 1 or 2, then press Enter" autocomplete="off">
   <button id="restart">Restart</button>
-  <p class="note">This playable web version is a direct port of Game.java, the Java source in this repo. Type 1 to go through the door with Nadia, or 2 to stay with your father.</p>
-</div>
 <script>
   const output = document.getElementById("output");
   const inputBox = document.getElementById("input");
