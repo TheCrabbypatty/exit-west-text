@@ -42,7 +42,7 @@
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const o = audioCtx.createOscillator();
       const g = audioCtx.createGain();
-      o.frequency.value = 250;
+      o.frequency.value = 100;
       g.gain.value = 0.03;
       o.connect(g);
       g.connect(audioCtx.destination);
