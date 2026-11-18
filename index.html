@@ -18,7 +18,7 @@
 <body>
 <div class="wrap">
   <h1>Doors: a text game about Exit West</h1>
-  <p class="sub">How to play: read the story, type 1 or 2, then press Enter. You get one choice. After that the game ends. Press Restart to play again.</p>
+  <p class="sub">How to play: read the story, type 1 or 2, then press Enter. You get a choice at each step. After 1, you get another choice. When you reach an ending, press Restart to play again.</p>
   <div id="output"></div>
   <input id="input" placeholder="Type 1 or 2, then press Enter" autocomplete="off">
   <button id="restart">Restart</button>
@@ -31,6 +31,10 @@
 
   // Is the game over? Starts false, becomes true after a valid choice.
   let gameOver = false;
+  // Where are you in the story? Starts at "start", then changes.
+  // This is how you go deeper: after one choice, you are in a new scene,
+  // and the next 1 or 2 means something new in that scene.
+  let scene = "start";
 
   // --- Typing + sound: one simple function, no files needed ---
   // tick() makes one short beep with the browser's built-in sound.
@@ -73,23 +77,37 @@
 
   // The whole game. One input in, one text out.
   // Error checking: only 1 or 2 are valid. Anything else gets an error.
-  // HOW TO ADD A CHOICE: add a new number to the check below,
-  // then add: else if (choice === 3) { return "Your new ending here."; }
-  // and mention 3 in getIntro() and in the instructions above.
+  // HOW TO GO DEEPER: check which scene you are in, then check the choice.
+  // To add a new step, add a new scene name, set scene = "yourScene",
+  // then add: if (scene === "yourScene") { if (choice === 1) { ... } else { ... } }
+  // To add a third choice in a scene, use: else if (choice === 3) { ... }
   function respond(input) {
     if (gameOver) return "The game is over. Press Restart to play again.";
     const choice = parseInt(input.trim(), 10);
     if (isNaN(choice) || (choice !== 1 && choice !== 2)) return "Please enter 1 or 2.";
-    gameOver = true;
-    if (choice === 1) {
-      return "You choose to continue on with your plan to go through the door with Nadia. When you go through the door, you arrive in Mykonos and begin living in the refugee camp there. Eventually, you take another door to London, and begin living in an abandoned large mansion with dozens of other refugees from around the world.\n\nThe end.";
-    } else {
-      return "You choose to abandon your plan with Nadia and stay with your father. Nadia is angry with you, but has to leave quickly in order to meet up with the agent. You spend the next few months with your father, always in fear of the militants deciding to kill you, or of the fighting starting up again. After a few months, your father contracts pneumonia and dies, leaving you alone. You begin having doubts about not going with Nadia when you had the chance, and imagine how life would be if you had chosen to go.\n\nThe end.";
+    if (scene === "start") {
+      if (choice === 1) {
+        scene = "mykonos";
+        return "You choose to continue on with your plan to go through the door with Nadia. When you go through the door, you arrive in Mykonos and begin living in the refugee camp there.\n\nWhat do you do? (1) Take another door to London. (2) Stay in Mykonos.";
+      } else {
+        gameOver = true;
+        return "You choose to abandon your plan with Nadia and stay with your father. Nadia is angry with you, but has to leave quickly in order to meet up with the agent. You spend the next few months with your father, always in fear of the militants deciding to kill you, or of the fighting starting up again. After a few months, your father contracts pneumonia and dies, leaving you alone. You begin having doubts about not going with Nadia when you had the chance, and imagine how life would be if you had chosen to go.\n\nThe end.";
+      }
     }
+    if (scene === "mykonos") {
+      gameOver = true;
+      if (choice === 1) {
+        return "You take another door to London, and begin living in an abandoned large mansion with dozens of other refugees from around the world.\n\nThe end.";
+      } else {
+        return "You stay in Mykonos, living in the refugee camp and waiting, wondering what life in London would have been like.\n\nThe end.";
+      }
+    }
+    return "Please enter 1 or 2.";
   }
 
   function startGame() {
     gameOver = false;
+    scene = "start";
     output.textContent = "";
     inputBox.value = "";
     typeText(getIntro(), () => {
