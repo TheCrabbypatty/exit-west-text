@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Doors: a text game about Exit West</title>
 <style>
-  body { background: #111; color: #f2f2f2; font-family: Georgia, serif; margin: 0; padding: 24px; }
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  body { background: #111; color: #f2f2f2; font-family: 'Press Start 2p', cursive; margin: 0; padding: 24px; }
   .wrap { max-width: 720px; margin: 0 auto; }
   h1 { font-size: 28px; margin: 0 0 8px 0; }
   p.sub { color: #bbb; font-size: 17px; line-height: 1.5; }
@@ -28,23 +29,20 @@
   const output = document.getElementById("output");
   const inputBox = document.getElementById("input");
   const restartButton = document.getElementById("restart");
-
-  // Is the game over? Starts false, becomes true after a valid choice.
+  
   let gameOver = false;
   // Where are you in the story? Starts at "start", then changes.
   // This is how you go deeper: after one choice, you are in a new scene,
-  // and the next 1 or 2 means something new in that scene.
   let scene = "start";
 
-  // --- Typing + sound: one simple function, no files needed ---
-  // tick() makes one short beep with the browser's built-in sound.
+  // tick() 
   let audioCtx = null;
   function tick() {
     try {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const o = audioCtx.createOscillator();
       const g = audioCtx.createGain();
-      o.frequency.value = 600;
+      o.frequency.value = 250;
       g.gain.value = 0.03;
       o.connect(g);
       g.connect(audioCtx.destination);
@@ -74,7 +72,7 @@
     return "In this choose your own adventure, you take the place of Saeed and will choose his choices at various times throughout the book, by entering 1 or 2.\n"
       + "After hearing that your father has chosen to stay in the city as to not leave the place he has lived his entire life with your mother. You have the choice to either continue on your plan to leave the city and go through the door with Nadia or to stay with your father. What do you do? (1 or 2)";
   }
-
+  // READ IF COLE B
   // The whole game. One input in, one text out.
   // Error checking: only 1 or 2 are valid. Anything else gets an error.
   // HOW TO GO DEEPER: check which scene you are in, then check the choice.
@@ -133,9 +131,6 @@
       return;
     }
     typeText(reply, () => {
-      // Only disable the input if the game is over.
-      // If this was a middle step, like Mykonos, keep it enabled
-      // so the player can type the next choice.
       inputBox.disabled = gameOver;
       if (!gameOver) inputBox.focus();
     });
