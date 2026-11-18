@@ -42,7 +42,7 @@
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const o = audioCtx.createOscillator();
       const g = audioCtx.createGain();
-      o.frequency.value = 100;
+      o.frequency.value = 200;
       g.gain.value = 0.03;
       o.connect(g);
       g.connect(audioCtx.destination);
@@ -95,11 +95,34 @@
     if (scene === "mykonos") {
       gameOver = true;
       if (choice === 1) {
-        return "You take another door to London, and begin living in an abandoned large mansion with dozens of other refugees from around the world.\n\nThe end.";
+	 scene = "london";
+        return "You take another door to London, and begin living in an abandoned large mansion with dozens of other refugees from around the world. \n\nWhat do you do? (1) Take another door to California. (2) Stay in London.";
       } else {
+	   gameOver = true;
         return "You stay in Mykonos, living in the refugee camp and waiting, wondering what life in London would have been like.\n\nThe end.";
       }
     }
+    if (scene === "london") {
+	if (choice === 1) {
+	   scene = "california";
+	   return "You and Nadia arrive in California after going through the door. You are relieved to be in what seems like a more calming and safe area, and begin to settle  down. Over time, you and Nadia grow apart and eventually decide to 'break up' and begin living seperate lives. One day 50 years later, in the country of your birth you hear that she had come back to visit her childhood home, and you wonder if you should reach out to start a meeting. \n\nWhat do you do? (1) Meet up with her for the first time in 50 years. (2) Don't meet up and continue on your seperate lives.";
+	    }
+	else {
+	  gameOver = true;
+        return "You stay in London, living in the abandoned mansion with dozens of other migrants, as the nativists become more aggressive. You begin to wonder what life would have been like in Californa with Nadia.\n\nThe end.";
+	}
+    }
+  if (scene === "california") {
+	if (choice === 1) {
+	   scene = "birthCountry";
+	   return "You choose meet up with her again,and as you are talking about the past,you begin to wonder what life could have been like had you made different choices.\n\nThe end";
+	    }
+	else {
+	  gameOver = true;
+        return "You choose not to meet up with Nadia, prefering to continue with your own life instead of going back into the past and wondering what could have been.\n\nThe end.";
+	}
+    }
+
     return "Please enter 1 or 2.";
   }
 
@@ -140,3 +163,5 @@
 </script>
 </body>
 </html>
+
+
