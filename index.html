@@ -119,11 +119,38 @@
       }
     }
     if (scene === "london") {
+      if (choice === 1) {
+        scene = "halo";
+        return "You stay inside with the others. The standoff lasts for days. In the end, the migrants are sectioned off into a ghetto called Dark London, with little food and little electricity. Later, you are put to work clearing land for a new city called Halo London. You are promised a small plot of land and a pipe. You and Nadia throw yourselves into the work, and you feel yourselves growing apart. Between the exhaustion and the way your romance is fading, you fall into a rut. One night, Nadia suggests you leave through another door, to Marin, in California.\n\nWhat do you do? (1) Go to Marin with Nadia. (2) Stay in London.";
+      } else {
+        gameOver = true;
+        return "You go outside to confront the crowd. You are caught in the street fighting, and you are hurt. Nadia is hurt too. The mansion is no longer safe.\n\nThe end.";
+      }
+    }
+    if (scene === "halo") {
+      if (choice === 1) {
+        scene = "marin";
+        return "You agree, and you go through another door. You arrive in Marin County, California, and build a shanty on a hillside above the bay. You are welcome here. Nadia finds work at a food cooperative down the hill, and you join a religious community led by a Black preacher. But you feel yourselves growing further apart. One night, Nadia says you should go your separate ways.\n\nWhat do you do? (1) Agree it is for the best. (2) Ask her to stay.";
+      } else {
+        gameOver = true;
+        return "You stay in London. You keep working for Halo London, and you are given your small plot of land and your pipe. But you and Nadia have grown apart, and you never leave.\n\nThe end.";
+      }
+    }
+    if (scene === "marin") {
+      if (choice === 1) {
+        scene = "final";
+        return "You agree it is for the best. Without embracing you, Nadia packs her things and leaves. She moves into a spare room at the food cooperative and begins a relationship with a cook who works there. You grow closer to the preacher's daughter, and you start dating. You marry her. Fifty years pass. One day, Nadia returns to the city you once fled from together, and you meet again in a caf\u00e9.\n\nWhat do you do? (1) Offer to take her to see the stars in Chile one day. (2) Say goodbye and part ways.";
+      } else {
+        gameOver = true;
+        return "You ask her to stay. She agrees, for now. You stay together in Marin, in the shanty above the bay, and you build a life there. It is not the life you imagined, but it is a life together.\n\nThe end.";
+      }
+    }
+    if (scene === "final") {
       gameOver = true;
       if (choice === 1) {
-        return "You stay inside with the others. The standoff lasts for days. In the end, the migrants are sectioned off into a ghetto called Dark London, with little food and little electricity. Later, you are put to work clearing land for a new city called Halo London. You are promised a small plot of land and a pipe. You and Nadia throw yourselves into the work, and you feel yourselves growing apart.\n\nThe end.";
+        return "You offer to take her to see the stars in Chile one day. Fifty years after you fled together, you are sitting across from each other again.\n\nThe end.";
       } else {
-        return "You go outside to confront the crowd. You are caught in the street fighting, and you are hurt. Nadia is hurt too. The mansion is no longer safe.\n\nThe end.";
+        return "You say goodbye. You part ways, and you do not see each other again.\n\nThe end.";
       }
     }
     return "Please enter 1 or 2.";
