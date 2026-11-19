@@ -5,6 +5,7 @@ A text-based choose-your-own-adventure game based on Exit West by Mohsin Hamid. 
 
 ## Instructions:
 - 1,2 for choices
+- Restart button to restart
 
 ## Where to play:
 - Google Sites: https://sites.google.com/madison.k12.wi.us/doors/home
