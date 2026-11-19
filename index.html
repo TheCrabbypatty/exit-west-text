@@ -5,14 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Doors: a text game about Exit West</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-  body { background: #111; color: #f2f2f2; font-family: 'Press Start 2p', cursive; margin: 0; padding: 24px; }
+  body { background: #111; color: #f2f2f2; font-family: Georgia, serif; margin: 0; padding: 24px; }
   .wrap { max-width: 720px; margin: 0 auto; }
   h1 { font-size: 28px; margin: 0 0 8px 0; }
-  p.sub { color: #bbb;  font-family: 'Press Start 2p', cursive; font-size: 17px; line-height: 1.5; }
+  p.sub { color: #bbb; font-size: 17px; line-height: 1.5; }
   #output { background: #000; border: 1px solid #444; padding: 18px; min-height: 260px; font-size: 19px; line-height: 1.6; white-space: pre-wrap; }
-  #input { width: 100%; font-family: 'Press Start 2p', cursive; box-sizing: border-box; margin-top: 12px; padding: 14px; font-size: 14px; background: #222; color: #fff; border: 1px solid #666; border-radius: 8px; }
-  #restart { margin-top: 12px; font-family: 'Press Start 2p', cursive; padding: 12px 18px; font-size: 18px; background: #333; color: #fff; border: 1px solid #666; border-radius: 8px; cursor: pointer; }
+  #input { width: 100%; box-sizing: border-box; margin-top: 12px; padding: 14px; font-size: 18px; background: #222; color: #fff; border: 1px solid #666; border-radius: 8px; }
+  #restart { margin-top: 12px; padding: 12px 18px; font-size: 18px; background: #333; color: #fff; border: 1px solid #666; border-radius: 8px; cursor: pointer; }
   .note { color: #aaa; font-size: 14px; line-height: 1.5; margin-top: 16px; }
 </style>
 </head>
@@ -23,25 +22,29 @@
   <div id="output"></div>
   <input id="input" placeholder="Type 1 or 2, then press Enter" autocomplete="off">
   <button id="restart">Restart</button>
+  <p class="note">Type 1 to go through the door with Nadia, or 2 to stay with your father.</p>
 </div>
 <script>
   const output = document.getElementById("output");
   const inputBox = document.getElementById("input");
   const restartButton = document.getElementById("restart");
-  
+
+  // Is the game over? Starts false, becomes true after a valid choice.
   let gameOver = false;
   // Where are you in the story? Starts at "start", then changes.
   // This is how you go deeper: after one choice, you are in a new scene,
+  // and the next 1 or 2 means something new in that scene.
   let scene = "start";
 
-  // tick() 
+  // --- Typing + sound: one simple function, no files needed ---
+  // tick() makes one short beep with the browser's built-in sound.
   let audioCtx = null;
   function tick() {
     try {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const o = audioCtx.createOscillator();
       const g = audioCtx.createGain();
-      o.frequency.value = 225;
+      o.frequency.value = 600;
       g.gain.value = 0.03;
       o.connect(g);
       g.connect(audioCtx.destination);
@@ -71,7 +74,7 @@
     return "In this choose your own adventure, you take the place of Saeed and will choose his choices at various times throughout the book, by entering 1 or 2.\n"
       + "After hearing that your father has chosen to stay in the city as to not leave the place he has lived his entire life with your mother. You have the choice to either continue on your plan to leave the city and go through the door with Nadia or to stay with your father. What do you do? (1 or 2)";
   }
-  // READ IF COLE B
+
   // The whole game. One input in, one text out.
   // Error checking: only 1 or 2 are valid. Anything else gets an error.
   // HOW TO GO DEEPER: check which scene you are in, then check the choice.
@@ -87,40 +90,54 @@
         scene = "mykonos";
         return "You choose to continue on with your plan to go through the door with Nadia. When you go through the door, you arrive in Mykonos and begin living in the refugee camp there.\n\nWhat do you do? (1) Take another door to London. (2) Stay in Mykonos.";
       } else {
+        scene = "afterfather";
+        return "You choose to abandon your plan with Nadia and stay with your father. Nadia is angry with you, but has to leave quickly in order to meet up with the agent. You spend the next few months with your father, always in fear of the militants deciding to kill you, or of the fighting starting up again. After a few months, your father contracts pneumonia and dies, leaving you alone. You begin having doubts about not going with Nadia when you had the chance, and you imagine how life would be if you had chosen to go.\n\nYou are alone now. What do you do? (1) Go through a door to find Nadia. (2) Stay in the city.";
+      }
+    }
+    if (scene === "afterfather") {
+      if (choice === 1) {
+        scene = "mykonos";
+        return "You find an agent and pay for a door. You step through and arrive in Mykonos. Nadia is there, living in the refugee camp. You find her, and you are together again.\n\nWhat do you do? (1) Take another door to London. (2) Stay in Mykonos.";
+      } else {
         gameOver = true;
-        return "You choose to abandon your plan with Nadia and stay with your father. Nadia is angry with you, but has to leave quickly in order to meet up with the agent. You spend the next few months with your father, always in fear of the militants deciding to kill you, or of the fighting starting up again. After a few months, your father contracts pneumonia and dies, leaving you alone. You begin having doubts about not going with Nadia when you had the chance, and imagine how life would be if you had chosen to go.\n\nThe end.";
+        return "You stay in the city. The fighting goes on. You are alone, and you keep wondering what happened to Nadia.\n\nThe end.";
       }
     }
     if (scene === "mykonos") {
       if (choice === 1) {
-	 scene = "london";
-        return "You take another door to London, and begin living in an abandoned large mansion with dozens of other refugees from around the world. \n\nWhat do you do? (1) Take another door to California. (2) Stay in London.";
+        scene = "doorpay";
+        return "The door to London costs money. Nadia has been working at the food cooperative, but you need more. What do you do? (1) Work and save until you can pay. (2) Take a cheaper door from an agent you do not trust.";
       } else {
-	   gameOver = true;
-        return "You stay in Mykonos, living in the refugee camp and waiting, wondering what life in London would have been like.\n\nThe end.";
+        scene = "mykonosstay";
+        return "You stay in Mykonos, living in the refugee camp. Nadia works at the food cooperative. What do you do? (1) Find work and build a life here. (2) Keep waiting for a door.";
+      }
+    }
+    if (scene === "doorpay") {
+      if (choice === 1) {
+        scene = "london";
+        return "You work and save. When you have enough, you pay the agent and take the door to London. You arrive in an abandoned large mansion, living there with dozens of other refugees from around the world. After a while, a crowd of nativists gathers outside, shouting. The police come too.\n\nWhat do you do? (1) Stay inside the mansion with the others. (2) Go outside and confront the crowd.";
+      } else {
+        gameOver = true;
+        return "You pay a cheaper agent. The door is in a dark house, and the agent will not look you in the eye. You step through and arrive somewhere you do not know, far from London, with no money and no way back.\n\nThe end.";
+      }
+    }
+    if (scene === "mykonosstay") {
+      if (choice === 1) {
+        gameOver = true;
+        return "You find work in the camp. You help the other refugees, and you build a small life here with Nadia. It is not the life you imagined, but it is a life.\n\nThe end.";
+      } else {
+        scene = "london";
+        return "You keep waiting, and you save what you can. After a while, you have enough, and you take another door to London. You arrive in an abandoned large mansion, living there with dozens of other refugees from around the world. After a while, a crowd of nativists gathers outside, shouting. The police come too.\n\nWhat do you do? (1) Stay inside the mansion with the others. (2) Go outside and confront the crowd.";
       }
     }
     if (scene === "london") {
-	if (choice === 1) {
-	   scene = "california";
-	   return "You and Nadia arrive in California after going through the door. You are relieved to be in what seems like a more calming and safe area, and begin to settle  down. Over time, you and Nadia grow apart and eventually decide to 'break up' and begin living seperate lives. One day 50 years later, in the country of your birth you hear that she had come back to visit her childhood home, and you wonder if you should reach out to start a meeting. \n\nWhat do you do? (1) Meet up with her for the first time in 50 years. (2) Don't meet up and continue on your seperate lives.";
-	    }
-	else {
-	  gameOver = true;
-        return "You stay in London, living in the abandoned mansion with dozens of other migrants, as the nativists become more aggressive. You begin to wonder what life would have been like in Californa with Nadia.\n\nThe end.";
-	}
+      gameOver = true;
+      if (choice === 1) {
+        return "You stay inside with the others. The standoff lasts for days. In the end, the authorities make a deal. You are given a small flat and papers that let you work. You and Nadia start over in London.\n\nThe end.";
+      } else {
+        return "You go outside to confront the crowd. Someone throws something. The police move in. In the confusion, you are separated from Nadia and arrested. You lose the mansion, and you lose her.\n\nThe end.";
+      }
     }
-  if (scene === "california") {
-	if (choice === 1) {
-	   scene = "birthCountry";
-	   return "You choose meet up with her again,and as you are talking about the past,you begin to wonder what life could have been like had you made different choices.\n\nThe end";
-	    }
-	else {
-	  gameOver = true;
-        return "You choose not to meet up with Nadia, prefering to continue with your own life instead of going back into the past and wondering what could have been.\n\nThe end.";
-	}
-    }
-
     return "Please enter 1 or 2.";
   }
 
@@ -152,6 +169,9 @@
       return;
     }
     typeText(reply, () => {
+      // Only disable the input if the game is over.
+      // If this was a middle step, like Mykonos, keep it enabled
+      // so the player can type the next choice.
       inputBox.disabled = gameOver;
       if (!gameOver) inputBox.focus();
     });
@@ -161,5 +181,3 @@
 </script>
 </body>
 </html>
-
-
