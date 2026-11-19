@@ -17,5 +17,5 @@ A text-based choose-your-own-adventure game based on Exit West by Mohsin Hamid. 
 ## Credits:
 - Thank you to <b>Mohsin Hamid</b> and his book, Exit West, for inspiration for the game. <br>
 - Thank you to <b>Google API's</b>, for providing the pixel game font.
-- Thank you to <b>http://pbs.org/newshour/arts/discussion-questions-for-exit-west<\b> for intriguing us.
-- And thank you to <b>Mr. Norderhaug<\b>, for providing guidance.
+- Thank you to <b>http://pbs.org/newshour/arts/discussion-questions-for-exit-west</b> for intriguing us.
+- And thank you to <b>Mr. Norderhaug</b>, for providing guidance.
