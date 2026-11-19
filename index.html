@@ -5,14 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Doors: a text game about Exit West</title>
 <style>
-  body { background: #111; color: #f2f2f2; font-family: Georgia, serif; margin: 0; padding: 24px; }
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  body { background: #111; color: #f2f2f2; font-family: 'Press Start 2p', cursive; margin: 0; padding: 24px; }
   .wrap { max-width: 720px; margin: 0 auto; }
   h1 { font-size: 28px; margin: 0 0 8px 0; }
   p.sub { color: #bbb; font-size: 17px; line-height: 1.5; }
   #output { background: #000; border: 1px solid #444; padding: 18px; min-height: 260px; font-size: 19px; line-height: 1.6; white-space: pre-wrap; }
-  #input { width: 100%; box-sizing: border-box; margin-top: 12px; padding: 14px; font-size: 18px; background: #222; color: #fff; border: 1px solid #666; border-radius: 8px; }
-  #restart { margin-top: 12px; padding: 12px 18px; font-size: 18px; background: #333; color: #fff; border: 1px solid #666; border-radius: 8px; cursor: pointer; }
-  .note { color: #aaa; font-size: 14px; line-height: 1.5; margin-top: 16px; }
+  #input { width: 100%; font-family: 'Press Start 2p', cursive; box-sizing: border-box; margin-top: 12px; padding: 14px; font-size: 18px; background: #222; color: #fff; border: 1px solid #666; border-radius: 8px; }
+  #restart { margin-top: 12px; font-family: 'Press Start 2p', cursive; padding: 12px 18px; font-size: 18px; background: #333; color: #fff; border: 1px solid #666; border-radius: 8px; cursor: pointer; }
+  .note { color: #aaa; font-family: 'Press Start 2p', cursive; font-size: 14px; line-height: 1.5; margin-top: 16px; }
 </style>
 </head>
 <body>
@@ -22,7 +23,6 @@
   <div id="output"></div>
   <input id="input" placeholder="Type 1 or 2, then press Enter" autocomplete="off">
   <button id="restart">Restart</button>
-  <p class="note">Type 1 to go through the door with Nadia, or 2 to stay with your father.</p>
 </div>
 <script>
   const output = document.getElementById("output");
@@ -44,7 +44,7 @@
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const o = audioCtx.createOscillator();
       const g = audioCtx.createGain();
-      o.frequency.value = 600;
+      o.frequency.value = 225;
       g.gain.value = 0.03;
       o.connect(g);
       g.connect(audioCtx.destination);
@@ -74,7 +74,7 @@
     return "In this choose your own adventure, you take the place of Saeed and will choose his choices at various times throughout the book, by entering 1 or 2.\n"
       + "After hearing that your father has chosen to stay in the city as to not leave the place he has lived his entire life with your mother. You have the choice to either continue on your plan to leave the city and go through the door with Nadia or to stay with your father. What do you do? (1 or 2)";
   }
-
+  // Read this if Cole B
   // The whole game. One input in, one text out.
   // Error checking: only 1 or 2 are valid. Anything else gets an error.
   // HOW TO GO DEEPER: check which scene you are in, then check the choice.
@@ -169,9 +169,6 @@
       return;
     }
     typeText(reply, () => {
-      // Only disable the input if the game is over.
-      // If this was a middle step, like Mykonos, keep it enabled
-      // so the player can type the next choice.
       inputBox.disabled = gameOver;
       if (!gameOver) inputBox.focus();
     });
