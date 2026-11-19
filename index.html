@@ -102,20 +102,11 @@
     }
     if (scene === "mykonos") {
       if (choice === 1) {
-        scene = "doorpay";
-        return "The door to London costs money. Nadia has been working at the food cooperative, but you need more. What do you do? (1) Work and save until you can pay. (2) Take a cheaper door from an agent you do not trust.";
+        scene = "london";
+        return "A local Greek girl who volunteers at the clinic has become friends with Nadia. She tells you about a door that leads to London, and she helps you through it. You step through and arrive in a grand, empty mansion, where dozens of other migrants are already settling in. After a while, a crowd of nativists gathers outside, shouting. The police come too.\n\nWhat do you do? (1) Stay inside the mansion with the others. (2) Go outside and confront the crowd.";
       } else {
         scene = "mykonosstay";
-        return "You stay in Mykonos, living in the refugee camp. Nadia works at the food cooperative. What do you do? (1) Find work and build a life here. (2) Keep waiting for a door.";
-      }
-    }
-    if (scene === "doorpay") {
-      if (choice === 1) {
-        scene = "london";
-        return "You work and save. When you have enough, you pay the agent and take the door to London. You arrive in an abandoned large mansion, living there with dozens of other refugees from around the world. After a while, a crowd of nativists gathers outside, shouting. The police come too.\n\nWhat do you do? (1) Stay inside the mansion with the others. (2) Go outside and confront the crowd.";
-      } else {
-        gameOver = true;
-        return "You pay a cheaper agent. The door is in a dark house, and the agent will not look you in the eye. You step through and arrive somewhere you do not know, far from London, with no money and no way back.\n\nThe end.";
+        return "You stay in Mykonos, living in the tent city. Nadia spends her days at the clinic, where she has become friends with a local Greek girl who volunteers there. What do you do? (1) Find work and build a life here. (2) Keep waiting for a door.";
       }
     }
     if (scene === "mykonosstay") {
@@ -124,15 +115,15 @@
         return "You find work in the camp. You help the other refugees, and you build a small life here with Nadia. It is not the life you imagined, but it is a life.\n\nThe end.";
       } else {
         scene = "london";
-        return "You keep waiting, and you save what you can. After a while, you have enough, and you take another door to London. You arrive in an abandoned large mansion, living there with dozens of other refugees from around the world. After a while, a crowd of nativists gathers outside, shouting. The police come too.\n\nWhat do you do? (1) Stay inside the mansion with the others. (2) Go outside and confront the crowd.";
+        return "You keep waiting. After a while, the Greek girl from the clinic takes you to a door. You step through and arrive in a grand, empty mansion, where dozens of other migrants are already settling in. After a while, a crowd of nativists gathers outside, shouting. The police come too.\n\nWhat do you do? (1) Stay inside the mansion with the others. (2) Go outside and confront the crowd.";
       }
     }
     if (scene === "london") {
       gameOver = true;
       if (choice === 1) {
-        return "You stay inside with the others. The standoff lasts for days. In the end, the authorities make a deal. You are given a small flat and papers that let you work. You and Nadia start over in London.\n\nThe end.";
+        return "You stay inside with the others. The standoff lasts for days. In the end, the migrants are sectioned off into a ghetto called Dark London, with little food and little electricity. Later, you are put to work clearing land for a new city called Halo London. You are promised a small plot of land and a pipe. You and Nadia throw yourselves into the work, and you feel yourselves growing apart.\n\nThe end.";
       } else {
-        return "You go outside to confront the crowd. Someone throws something. The police move in. In the confusion, you are separated from Nadia and arrested. You lose the mansion, and you lose her.\n\nThe end.";
+        return "You go outside to confront the crowd. You are caught in the street fighting, and you are hurt. Nadia is hurt too. The mansion is no longer safe.\n\nThe end.";
       }
     }
     return "Please enter 1 or 2.";
